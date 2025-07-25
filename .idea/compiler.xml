@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="wishlist-monorepo.wishlist.main" />
+        <module name="wishlist-monorepo.wishlist-auth.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="17">
+      <module name="auth-wishlist" target="17" />
+      <module name="auth-wishlist.main" target="17" />
+      <module name="auth-wishlist.test" target="17" />
+      <module name="org.ataraxii.wishlist" target="17" />
+      <module name="org.ataraxii.wishlist.main" target="17" />
+      <module name="org.ataraxii.wishlist.test" target="17" />
+      <module name="wishlist-api" target="17" />
+      <module name="wishlist-api.main" target="17" />
+      <module name="wishlist-api.test" target="17" />
+      <module name="wishlist-discovery" target="17" />
+      <module name="wishlist-discovery.main" target="17" />
+      <module name="wishlist-discovery.test" target="17" />
+      <module name="wishlist-gateway" target="17" />
+      <module name="wishlist-gateway.main" target="17" />
+      <module name="wishlist-gateway.test" target="17" />
+      <module name="wishlist.main" target="17" />
+      <module name="wishlist.test" target="17" />
+      <module name="wishlist.wishlist-api.main" target="17" />
+      <module name="wishlist.wishlist-api.test" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

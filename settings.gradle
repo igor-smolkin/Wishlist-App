@@ -1,0 +1,6 @@
+rootProject.name = 'wishlist-monorepo'
+
+include 'wishlist'          // API сервис
+include 'wishlist-auth'     // Auth сервис
+include 'wishlist-discovery'// Discovery сервис
+include 'wishlist-gateway'  // Gateway сервис

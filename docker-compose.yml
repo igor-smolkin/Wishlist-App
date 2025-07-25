@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+
+  auth-service:
+    build:
+      context: ./wishlist-auth
+    container_name: wishlist_auth
+    depends_on:
+      auth_db:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: on-failure
+
+  auth_db:
+    image: postgres:15
+    container_name: auth_db
+    environment:
+      POSTGRES_DB: ${AUTH_DB_NAME}
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - authdb-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend-service:
+    build:
+      context: ./wishlist-api
+    container_name: wishlist_api
+    depends_on:
+      wishlist_db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+    restart: on-failure
+
+  api_db:
+    image: postgres:15
+    container_name: api_db
+    environment:
+      POSTGRES_DB: ${API_DB_NAME}
+      POSTGRES_USER: ${API_DB_USER}
+      POSTGRES_PASSWORD: ${API_DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gateway:
+    build:
+      context: ./wishlist-gateway
+    ports:
+      - "8085:8085"
+    depends_on:
+      - auth-service
+      - backend-service
+      - eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  eureka-server:
+    build:
+      context: ./wishlist-discovery
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      -
+volumes:
+  pgdata:
+  authdb-data:
