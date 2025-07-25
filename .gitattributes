@@ -1,0 +1,6 @@
+HELP.md linguist-documentation
+*.md linguist-documentation
+*.html linguist-documentation
+*.yml linguist-generated
+build/** linguist-generated
+docs/** linguist-documentation
