@@ -1,0 +1,49 @@
+# Java / Spring
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven / Gradle
+target/
+build/
+out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+/.idea_modules/
+.idea/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VSCode
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
+
+# Spring Boot specific
+spring-boot-app.log
+
+# Lombok generated files (optional)
+*.gen.java
+
+# Others
+*.swp
+*~
+*.tmp
