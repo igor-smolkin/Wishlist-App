@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wishlist/wishlist-monorepo.wishlist.iml" filepath="$PROJECT_DIR$/.idea/modules/wishlist/wishlist-monorepo.wishlist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wishlist-auth/wishlist-monorepo.wishlist-auth.iml" filepath="$PROJECT_DIR$/.idea/modules/wishlist-auth/wishlist-monorepo.wishlist-auth.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wishlist-auth/wishlist-monorepo.wishlist-auth.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wishlist-auth/wishlist-monorepo.wishlist-auth.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wishlist/wishlist-monorepo.wishlist.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wishlist/wishlist-monorepo.wishlist.main.iml" />
     </modules>
