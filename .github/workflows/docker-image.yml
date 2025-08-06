@@ -22,7 +22,7 @@ jobs:
         echo "${{ secrets.CA_CERT }}" | sudo tee /etc/docker/certs.d/${{ secrets.REGISTRY }}:5000/ca.crt
         sudo systemctl restart docker
 
-    - name: Build and push Docker image
+    - name: Build and push wishlist-auth docker image
       run: |
         VERSION=$(date +%s)
         docker build . --file ./wishlist-auth/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION
@@ -30,7 +30,7 @@ jobs:
         docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
         docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-auth
 
-    - name: Build and push Docker image
+    - name: Build and push wishlist-discovery docker image
       run: |
         VERSION=$(date +%s)
         docker build . --file ./wishlist-discovery/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION
@@ -38,7 +38,7 @@ jobs:
         docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
         docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-discovery
 
-    - name: Build and push Docker image
+    - name: Build and push wishlist-gateway docker image
       run: |
         VERSION=$(date +%s)
         docker build . --file ./wishlist-gateway/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION
@@ -46,7 +46,7 @@ jobs:
         docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
         docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-gateway
 
-    - name: Build and push Docker image
+    - name: Build and push wishlist docker image
       run: |
         VERSION=$(date +%s)
         docker build . --file ./wishlist/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist:$VERSION
