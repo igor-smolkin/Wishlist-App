@@ -1,0 +1,77 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build_and_push_images:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add registry to /etc/hosts
+      run: echo "${{ secrets.SERVER_URL }} ${{ secrets.REGISTRY }}" | sudo tee -a /etc/hosts
+    
+    - name: Install CA certificate
+      run: |
+        sudo mkdir -p /etc/docker/certs.d/${{ secrets.REGISTRY }}:5000
+        echo "${{ secrets.CA_CERT }}" | sudo tee /etc/docker/certs.d/${{ secrets.REGISTRY }}:5000/ca.crt
+        sudo systemctl restart docker
+
+    - name: Build and push Docker image
+      run: |
+        VERSION=$(date +%s)
+        docker build . --file ./wishlist-auth/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-auth:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-auth
+
+    - name: Build and push Docker image
+      run: |
+        VERSION=$(date +%s)
+        docker build . --file ./wishlist-discovery/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-discovery:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-discovery
+
+    - name: Build and push Docker image
+      run: |
+        VERSION=$(date +%s)
+        docker build . --file ./wishlist-gateway/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-gateway:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-gateway
+
+    - name: Build and push Docker image
+      run: |
+        VERSION=$(date +%s)
+        docker build . --file ./wishlist/Dockerfile --tag ${{ secrets.REGISTRY }}:5000/wishlist:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist
+        docker logout ${{ secrets.REGISTRY }}:5000
+
+  deploy_to_server:
+
+    needs: build_and_push_images
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull and run latest wish app image
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_URL }}
+          username: ${{ secrets.USER }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.SERVER_PRIVATE_SSH_KEY }}
+          script: |
+            cd /app/wish/wishlist-backend
+            docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
+            docker compose pull
+            docker compose up -d
+            docker logout ${{ secrets.REGISTRY }}:5000
