@@ -35,10 +35,10 @@ services:
 
   backend-service:
     build:
-      context: ./wishlist-api
+      context: ./wishlist
     container_name: wishlist_api
     depends_on:
-      wishlist_db:
+      api_db:
         condition: service_healthy
     ports:
       - "8080:8080"
@@ -82,7 +82,6 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=default
-      -
 volumes:
   pgdata:
   authdb-data:
