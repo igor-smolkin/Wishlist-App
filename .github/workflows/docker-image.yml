@@ -23,8 +23,8 @@ jobs:
       run: |
         trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
         VERSION=$(date +%s)
-        docker build ./wishlist-auth --tag {{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION
-        docker tag {{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION {{ secrets.REGISTRY }}:5000/wishlist-auth:latest
+        docker build ./wishlist-auth --tag ${{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-auth:latest
         docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
         docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-auth
 
@@ -46,8 +46,8 @@ jobs:
       run: |
         trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
         VERSION=$(date +%s)
-        docker build ./wishlist-discovery --tag {{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION
-        docker tag {{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION {{ secrets.REGISTRY }}:5000/wishlist-discovery:latest
+        docker build ./wishlist-discovery --tag ${{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-discovery:latest
         docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
         docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-discovery
 
@@ -69,8 +69,8 @@ jobs:
       run: |
         trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
         VERSION=$(date +%s)
-        docker build ./wishlist-gateway --tag {{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION
-        docker tag {{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION {{ secrets.REGISTRY }}:5000/wishlist-gateway:latest
+        docker build ./wishlist-gateway --tag ${{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-gateway:latest
         docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
         docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-gateway
 
@@ -92,8 +92,8 @@ jobs:
       run: |
         trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
         VERSION=$(date +%s)
-        docker build ./wishlist --tag {{ secrets.REGISTRY }}:5000/wishlist:$VERSION
-        docker tag {{ secrets.REGISTRY }}:5000/wishlist:$VERSION {{ secrets.REGISTRY }}:5000/wishlist:latest
+        docker build ./wishlist --tag ${{ secrets.REGISTRY }}:5000/wishlist:$VERSION
+        docker tag ${{ secrets.REGISTRY }}:5000/wishlist:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist:latest
         docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
         docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist
 
