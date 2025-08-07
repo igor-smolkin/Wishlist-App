@@ -20,16 +20,13 @@ jobs:
         sudo systemctl restart docker
 
     - name: Build and push wishlist-auth docker image
-      uses: gacts/run-and-post-run@v1
-      with:
-        run: |
-          VERSION=$(date +%s)
-          docker build ./wishlist-auth --tag ${{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION
-          docker tag ${{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-auth:latest
-          docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
-          docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-auth
-        post: |
-          docker logout ${{ secrets.REGISTRY }}:5000
+      run: |
+        trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
+        VERSION=$(date +%s)
+        docker build ./wishlist-auth --tag {{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION
+        docker tag {{ secrets.REGISTRY }}:5000/wishlist-auth:$VERSION {{ secrets.REGISTRY }}:5000/wishlist-auth:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-auth
 
   build_and_push_discovery:
     runs-on: ubuntu-latest
@@ -46,16 +43,13 @@ jobs:
         sudo systemctl restart docker
 
     - name: Build and push wishlist-discovery docker image
-      uses: gacts/run-and-post-run@v1
-      with:
-        run: |
-          VERSION=$(date +%s)
-          docker build ./wishlist-discovery --tag ${{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION
-          docker tag ${{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-discovery:latest
-          docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
-          docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-discovery
-        post: |
-          docker logout ${{ secrets.REGISTRY }}:5000
+      run: |
+        trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
+        VERSION=$(date +%s)
+        docker build ./wishlist-discovery --tag {{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION
+        docker tag {{ secrets.REGISTRY }}:5000/wishlist-discovery:$VERSION {{ secrets.REGISTRY }}:5000/wishlist-discovery:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-discovery
 
   build_and_push_gateway:
     runs-on: ubuntu-latest
@@ -72,16 +66,13 @@ jobs:
         sudo systemctl restart docker
 
     - name: Build and push wishlist-gateway docker image
-      uses: gacts/run-and-post-run@v1
-      with:
-        run: |
-          VERSION=$(date +%s)
-          docker build ./wishlist-gateway --tag ${{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION
-          docker tag ${{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist-gateway:latest
-          docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
-          docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-gateway
-        post: |
-          docker logout ${{ secrets.REGISTRY }}:5000
+      run: |
+        trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
+        VERSION=$(date +%s)
+        docker build ./wishlist-gateway --tag {{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION
+        docker tag {{ secrets.REGISTRY }}:5000/wishlist-gateway:$VERSION {{ secrets.REGISTRY }}:5000/wishlist-gateway:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist-gateway
 
   build_and_push_wishlist:
     runs-on: ubuntu-latest
@@ -98,16 +89,13 @@ jobs:
         sudo systemctl restart docker
 
     - name: Build and push wishlist docker image
-      uses: gacts/run-and-post-run@v1
-      with:
-        run: |
-          VERSION=$(date +%s)
-          docker build ./wishlist --tag ${{ secrets.REGISTRY }}:5000/wishlist:$VERSION
-          docker tag ${{ secrets.REGISTRY }}:5000/wishlist:$VERSION ${{ secrets.REGISTRY }}:5000/wishlist:latest
-          docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
-          docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist
-        post: |
-          docker logout ${{ secrets.REGISTRY }}:5000
+      run: |
+        trap "docker logout ${{ secrets.REGISTRY }}:5000 || true" EXIT
+        VERSION=$(date +%s)
+        docker build ./wishlist --tag {{ secrets.REGISTRY }}:5000/wishlist:$VERSION
+        docker tag {{ secrets.REGISTRY }}:5000/wishlist:$VERSION {{ secrets.REGISTRY }}:5000/wishlist:latest
+        docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} REGISTRY:5000
+        docker push --all-tags ${{ secrets.REGISTRY }}:5000/wishlist
 
   deploy_to_server:
     needs: [build_and_push_auth, build_and_push_discovery, build_and_push_gateway, build_and_push_wishlist]
@@ -125,8 +113,4 @@ jobs:
             docker login -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }} ${{ secrets.REGISTRY }}:5000
             docker compose pull
             docker compose up -d
-
-      - name: Docker logout
-        uses: gacts/run-and-post-run@v1
-        with:
-          post: docker logout ${{ secrets.REGISTRY }}:5000
+            docker logout ${{ secrets.REGISTRY }}:5000
